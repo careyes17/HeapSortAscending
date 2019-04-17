@@ -1,4 +1,4 @@
-public class hw2 {
+public class HeapSortAscending {
 
   /*
    * Definitions of the parameters
