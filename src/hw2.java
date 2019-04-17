@@ -1,4 +1,3 @@
-
 public class hw2 {
 
   /*
@@ -15,56 +14,55 @@ public class hw2 {
   static void insertAt(int[] heap, int newEle,
       int pos, boolean increment) {
     int parent, child;
-    if (increment) {
-      child = pos;
-      parent = (child - 1) / 2;
-      while (child > 0 && heap[parent] < newEle) {
-        heap[child] = heap[parent];
-        child = parent;
-        parent = (child - 1) / 2;
+    if (increment) { // if a new element is to be inserted
+      child = pos; // adds child location to the end
+      parent = (child - 1) / 2; // finds parent of child
+      while (child > 0
+          && heap[parent] < newEle) { // while bubbling up is possible and child isn't 0 or less
+        heap[child] = heap[parent]; // child takes parent's value
+        child = parent; // child goes to the parent's level
+        parent = (child - 1) / 2; // parent finds new children
       }
       heap[child] = newEle;
 
-    } else {
+    } else { // if a heap must be altered
 
-      if (newEle < heap[0]) {
-        heap[pos] = newEle;
-        child = pos;
-        parent = (child - 1) / 2;
-        while (child > 0 && heap[parent] < newEle) {
-          int temp = heap[child];
-          heap[child] = heap[parent];
-          heap[parent] = temp;
+      if (newEle < heap[0]) { // only access if the next value is larger than the max
+        heap[pos] = newEle; // adds new value to the end of the array
+        child = pos; // sets child location in array
+        parent = (child - 1) / 2; // finds parent of child
+        while (child > 0
+            && heap[parent] < newEle) { // bubble up the newly inserted value as much as possible
+          heap = swap(heap, parent, child);
           child = parent;
           parent = (child - 1) / 2;
         }
-        heap[0] = heap[pos];
-        parent = 0;
-        while (parent * 2 + 1 < pos) {
-          int l = parent * 2 + 1;
-          int r = parent * 2 + 2;
-          if (heap[l] >= heap[r]) {
-            if (heap[parent] < heap[l]) {
-              int temp = heap[parent];
-              heap[parent] = heap[l];
-              heap[l] = temp;
-              parent = l;
-            } else {
-              break;
-            }
-          } else {
-            if (heap[parent] < heap[r]) {
-              int temp = heap[parent];
-              heap[parent] = heap[r];
-              heap[r] = temp;
-              parent = r;
-            } else {
-              break;
-            }
+        heap[0] = heap[pos]; // putting pos value in root, no need to swap values
+        parent = 0; // setting bubble down root
+        while (parent * 2 + 1 < pos) { // bubble down as long as the bottom isn't hit
+          int l = parent * 2 + 1; // left "node"
+          int r = parent * 2 + 2; // right "node"
+          if (heap[l]
+              >= heap[r]) { // if left node is >= right, swap values of left and parent and make left the new parent node
+            heap = swap(heap, parent, l);
+            parent = l; // parent now becomes left "node"
+          } else { // if right node is > left, swap values of right and parent and make right the new parent node
+            heap = swap(heap, parent, r);
+            parent = r; // parent now becomes right "node"
           }
         }
       }
     }
+  }
+
+  // swaps parent and child "node" values and returns the resulting array to be reassigned
+  private static int[] swap(int[] heap, int parent, int child) {
+    if (heap[parent] < heap[child]) { // if the child value is greater than parent value, swap
+      int temp = heap[parent];
+      heap[parent] = heap[child];
+      heap[child] = temp;
+    }
+    return heap;
   }
 
 
@@ -114,46 +112,26 @@ public class hw2 {
 
     // insert your code here
 
-    //int[] temp = new int[k];
-
-    for (int i = k-1; i >= 0; i--) {
-      //temp[i] = result[0];
-      int tempVal = result[0];
-      result[0] = result[i];
-      result[i] = tempVal;
+    // for k, bubble down logk times
+    for (int i = k - 1; i >= 0; i--) {
+      result = swap(result, i, 0); // swaps root to the back of the array
       int parent = 0;
-      while (parent * 2 + 1 < i-1) {
-        int l = parent * 2 + 1;
-        int r = parent * 2 + 2;
-        if (result[l] >= result[r]) {
-          if (result[parent] < result[l]) {
-            int tempInt = result[parent];
-            result[parent] = result[l];
-            result[l] = tempInt;
-            parent = l;
-          } else {
-            break;
-          }
-        } else {
-          if (result[parent] < result[r]) {
-            int tempInt = result[parent];
-            result[parent] = result[r];
-            result[r] = tempInt;
-            parent = r;
-          } else {
-            break;
-          }
+      while (parent * 2 + 1 < i - 1) { // for current k size of array, bubble down
+        int l = parent * 2 + 1; // left "node"
+        int r = parent * 2 + 2; // right "node"
+        if (result[l] >= result[r]) { // if left "node" is >= right "node"
+          result = swap(result, parent, l); // swap values of parent and child if possible
+          parent = l; // left "node" is new parent
+        } else { // if right node is > left, swap values of right and parent and make right the new parent node
+          result = swap(result, parent, r);
+          parent = r;
         }
       }
     }
 
     if (result[0] > result[1]) {
-      int temp = result[0];
-      result[0] = result[1];
-      result[1] = temp;
+      result = swap(result, 1, 0); // swaps top 2 values of heap if not in order
     }
-
-    //result = temp;
 
     return result;
 
