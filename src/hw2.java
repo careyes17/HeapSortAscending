@@ -114,13 +114,15 @@ public class hw2 {
 
     // insert your code here
 
-    int[] temp = new int[k];
+    //int[] temp = new int[k];
 
     for (int i = k-1; i >= 0; i--) {
-      temp[i] = result[0];
+      //temp[i] = result[0];
+      int tempVal = result[0];
       result[0] = result[i];
+      result[i] = tempVal;
       int parent = 0;
-      while (parent * 2 + 1 < i) {
+      while (parent * 2 + 1 < i-1) {
         int l = parent * 2 + 1;
         int r = parent * 2 + 2;
         if (result[l] >= result[r]) {
@@ -145,7 +147,13 @@ public class hw2 {
       }
     }
 
-    result = temp;
+    if (result[0] > result[1]) {
+      int temp = result[0];
+      result[0] = result[1];
+      result[1] = temp;
+    }
+
+    //result = temp;
 
     return result;
 
